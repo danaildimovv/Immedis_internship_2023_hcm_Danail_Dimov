@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.DTO;
+using WebAPI.Interfaces;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -8,32 +10,48 @@ namespace WebAPI.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly HcmContext _context;
-
-        public EmployeesController(HcmContext context)
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IMapper _mapper;
+        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
         {
-            _context = context;
+            _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetEmployees()
         {
-            var employees = _context.Employees.ToList();
+            
+            var employees = _mapper.Map<List<EmployeeDTO>>(await _employeeRepository.GetEmployeesAsync());
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (employees.Count == 0)
             {
                 return NotFound("No employees");
             }
 
+
+
             return Ok(employees);
         }
 
+        
         [HttpGet("{id}")]
-        public IActionResult Get(int id) {
-            var employee = _context.Employees.Find(id);
+        public async Task<IActionResult> GetEmployeeById(int id) {
+            var employee = _mapper.Map<EmployeeDTO>(await _employeeRepository.GetEmployeeByIdAsync(id));
 
             try { 
+                
                 if (employee == null) {
                     return NotFound("No employee");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
                 return Ok(employee);
@@ -44,14 +62,14 @@ namespace WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        /*
         [HttpPost]
-        public IActionResult Post(Employee employee)
+        public async Task<IActionResult> Post(Employee employee)
         {
             try { 
-                _context.Add(employee);
-                _context.SaveChanges();
-                return Ok("added.");
+                await _context.Employees.AddAsync(employee);
+                await _context.SaveChangesAsync();
+                return Ok("New employee was added.");
             }
             catch (Exception e)
             {
@@ -60,18 +78,20 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(Employee employee)
+        public async Task<IActionResult> Put(Employee employee)
         {
             if (employee == null)
             {
                 return BadRequest("wrong employee change");
             }
 
-            var emp = _context.Employees.Find(employee.EmployeeId);
+            var emp = await _context.Employees.FindAsync(employee.EmployeeId);
+            
             if (emp == null)
             {
                 return NotFound("Not Found.");
             }
+            
 
             try { 
                 emp.FirstName = employee.FirstName;
@@ -90,7 +110,8 @@ namespace WebAPI.Controllers
                 emp.Gender = employee.Gender;
                 emp.DateOfEmployment = employee.DateOfEmployment;
                 emp.DateOfLeaving = employee.DateOfLeaving;
-                _context.SaveChanges();
+
+                await _context.SaveChangesAsync();
 
                 return Ok("change");
             }
@@ -101,9 +122,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var employee = _context.Employees.Find(id);
+            var employee = await _context.Employees.FindAsync(id);
 
             if (employee == null)
             {
@@ -112,7 +133,7 @@ namespace WebAPI.Controllers
 
             try { 
                 _context.Employees.Remove(employee);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return Ok("delete");
             }
             catch (Exception e)
@@ -120,7 +141,7 @@ namespace WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        */
 
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Models;
 
-namespace WebAPI.Models;
+namespace WebAPI.Data;
 
 public partial class HcmContext : DbContext
 {

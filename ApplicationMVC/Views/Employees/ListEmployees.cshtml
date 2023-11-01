@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ApplicationMVC.Models.Employee>
+
+@{
+    ViewData["Title"] = "EmployeesController";
+}
+
+<h1>EmployeesController</h1>
+
+<p>
+    <a asp-action="AddEmployee">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExperienceLevelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EducationLevelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayrollId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NationalityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExperienceLevelId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EducationLevelId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayrollId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NationalityId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
