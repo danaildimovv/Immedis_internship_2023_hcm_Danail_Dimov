@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
+using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -63,6 +65,25 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(UserDTO user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userMap = _mapper.Map<HcmUser>(user);
+            var userCreated = await _userRepository.CreateUserAsync(userMap);
+
+            if (!await userCreated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success in creating");
         }
     }
 }

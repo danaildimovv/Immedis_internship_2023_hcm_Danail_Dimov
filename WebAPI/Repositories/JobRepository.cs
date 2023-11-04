@@ -7,9 +7,11 @@ namespace WebAPI.Repositories
 {
     public class JobRepository : IJobRepository
     {
+        private readonly IGenericRepository _genericRepository;
         private readonly HcmContext _context;
-        public JobRepository(HcmContext context)
+        public JobRepository(IGenericRepository genericRepository, HcmContext context)
         {
+            _genericRepository = genericRepository;
             _context = context;
         }
 
@@ -26,13 +28,18 @@ namespace WebAPI.Repositories
         public async Task<Task<bool>> CreateJobAsync(Job job)
         {
             await _context.Jobs.AddAsync(job);
-            return SaveAsync();
+            return _genericRepository.SaveAsync();
+        }
+        public async Task<bool> UpdateJobAsync(Job job)
+        {
+            _context.Jobs.Update(job);
+            return await _genericRepository.SaveAsync();
+        }
+        public async Task<bool> DeleteJobAsync(Job job)
+        {
+            _context.Jobs.Remove(job);
+            return await _genericRepository.SaveAsync();
         }
 
-        public async Task<bool> SaveAsync()
-        {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0 ? true : false;
-        }
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
+using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -64,5 +66,26 @@ namespace WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpPost]
+
+        public async Task<IActionResult> AddEducationLevel(EducationLevelDTO educationLevel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var educationLevelMap = _mapper.Map<EducationLevel>(educationLevel);
+            var educationLevelCreated = await _educationLevelRepository.AddEducationLevelAsync(educationLevelMap);
+
+            if (!await educationLevelCreated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success in creating");
+        }
     }
+    
 }

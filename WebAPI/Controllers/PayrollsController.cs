@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
+using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -63,6 +65,25 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddPayroll(PayrollDTO payroll)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var payrollMap = _mapper.Map<Payroll>(payroll);
+            var payrollCreated = await _payrollRepository.AddPayrollAsync(payrollMap);
+
+            if (!await payrollCreated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success in creating");
         }
     }
 }

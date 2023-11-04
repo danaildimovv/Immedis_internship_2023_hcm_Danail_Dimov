@@ -7,7 +7,7 @@ namespace WebAPI.Interfaces
         Task<ICollection<Project>> GetProjectsAsync();
         Task<Project> GetProjectByIdAsync(int id);
         Task<Task<bool>> CreateProjectAsync(Project project);
-
-        Task<bool> SaveAsync();
+        Task<bool> UpdateProjectAsync(Project project);
+        Task<bool> DeleteProjectAsync(Project project);
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
+using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -69,6 +71,64 @@ namespace WebAPI.Controllers
         {
             var jobs = _mapper.Map<List<JobDTO>>(await _departmentRepository.GetJobByDepartmentIdAsync(id));
             return Ok(jobs);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddDepartment(DepartmentDTO department)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var departmentMap = _mapper.Map<Department>(department);
+            var departmentCreated = await _departmentRepository.AddDepartmentAsync(departmentMap);
+
+            if (!await departmentCreated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success in creating");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDepartment(int id, DepartmentDTO department)
+        {
+            if(id != department.DepartmentId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var departmentMap = _mapper.Map<Department>(department);
+            var departmentUpdated = _departmentRepository.UpdateDepartmentAsync(departmentMap);
+
+            if (!await departmentUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDepartment(int id)
+        {
+            var department = await _departmentRepository.GetDepartmentByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _departmentRepository.DeleteDepartmentAsync(department))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+
         }
     }
 }

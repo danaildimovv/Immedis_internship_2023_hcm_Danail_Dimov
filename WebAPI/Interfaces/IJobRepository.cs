@@ -8,6 +8,7 @@ namespace WebAPI.Interfaces
         Task<Job> GetJobByIdAsync(int id);
 
         Task<Task<bool>> CreateJobAsync(Job job);
-        Task<bool> SaveAsync();
+        Task<bool> UpdateJobAsync(Job job);
+        Task<bool> DeleteJobAsync(Job job);
     }
 }

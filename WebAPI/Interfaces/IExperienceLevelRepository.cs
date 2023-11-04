@@ -7,5 +7,9 @@ namespace WebAPI.Interfaces
         Task<ICollection<ExperienceLevel>> GetExperienceLevelsAsync();
 
         Task<ExperienceLevel> GetExperienceLevelByIdAsync(int id);
+
+        Task<Task<bool>> AddExperienceLevelAsync(ExperienceLevel experienceLevel);
+        Task<bool> UpdateExperienceLevelAsync(ExperienceLevel experienceLevel);
+        Task<bool> DeleteExperienceLevelAsync(ExperienceLevel experienceLevel);
     }
 }

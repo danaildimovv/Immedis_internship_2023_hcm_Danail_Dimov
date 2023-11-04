@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
+using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -71,6 +73,61 @@ namespace WebAPI.Controllers
             var employees = _mapper.Map<List<EmployeeDTO>>(await _countryRepository.GetEmployeesByCountryIdAsync(id));
 
             return Ok(employees);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddCountry(CountryDTO country)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var countryMap = _mapper.Map<Country>(country);
+            var countryCreated = await _countryRepository.AddCountryAsync(countryMap);
+
+            if (!await countryCreated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success in creating");
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCountry(int id, CountryDTO country)
+        {
+            if(id != country.CountryId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var countryMap = _mapper.Map<Country>(country);
+            var countryUpdated = _countryRepository.UpdateCountryAsync(countryMap);
+
+            if (!await countryUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCountry(int id)
+        {
+            var country = await _countryRepository.GetCountryByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _countryRepository.DeleteCountryAsync(country))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+           
         }
     }
 }
