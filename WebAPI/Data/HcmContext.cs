@@ -154,6 +154,11 @@ public partial class HcmContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("employees_experience_level_id_fkey");
 
+            entity.HasOne(d => d.EducationLevel).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.EducationLevelId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("employees_education_level_id_fkey");
+
             entity.HasOne(d => d.Job).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.JobId)
                 .OnDelete(DeleteBehavior.Restrict)
@@ -194,12 +199,12 @@ public partial class HcmContext : DbContext
 
             entity.HasOne(d => d.Branch).WithMany(p => p.EmployeesBranchesHistories)
                 .HasForeignKey(d => d.BranchId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employees_branches_history_branch_id_fkey");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeesBranchesHistories)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employees_branches_history_employee_id_fkey");
         });
 
@@ -217,12 +222,12 @@ public partial class HcmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeesJobHistories)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employees_job_history_employee_id_fkey");
 
             entity.HasOne(d => d.Job).WithMany(p => p.EmployeesJobHistories)
                 .HasForeignKey(d => d.JobId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employees_job_history_job_id_fkey");
         });
 
@@ -247,10 +252,9 @@ public partial class HcmContext : DbContext
             entity.HasIndex(e => e.Username, "hcm_users_username_key").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.UserPassword)
-                .HasMaxLength(50)
-                .HasColumnName("user_password");
+            entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
             entity.Property(e => e.UserRoleId).HasColumnName("user_role_id");
+            entity.Property(e => e.PasswordSalt).HasColumnName("password_salt");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
@@ -322,12 +326,12 @@ public partial class HcmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.ProjectsTeamsHistories)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("projects_teams_history_employee_id_fkey");
 
             entity.HasOne(d => d.Project).WithMany(p => p.ProjectsTeamsHistories)
                 .HasForeignKey(d => d.ProjectId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("projects_teams_history_project_id_fkey");
         });
 
@@ -358,12 +362,12 @@ public partial class HcmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.TrainingsHistories)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("trainings_history_employee_id_fkey");
 
             entity.HasOne(d => d.Training).WithMany(p => p.TrainingsHistories)
                 .HasForeignKey(d => d.TrainingId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("trainings_history_training_id_fkey");
         });
 

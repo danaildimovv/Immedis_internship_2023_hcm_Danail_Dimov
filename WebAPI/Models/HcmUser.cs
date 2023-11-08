@@ -9,9 +9,10 @@ public partial class HcmUser
 
     public string Username { get; set; } = null!;
 
-    public string UserPassword { get; set; } = null!;
+    public byte[] PasswordHash { get; set; } = null!;
 
     public int UserRoleId { get; set; }
+    public byte[] PasswordSalt { get; set; } = null!;
 
     public virtual Employee? Employee { get; set; }
 

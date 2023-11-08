@@ -1,0 +1,47 @@
+﻿@model ApplicationMVC.Models.Payroll
+
+@{
+    ViewData["Title"] = "AddPayroll";
+}
+
+<h1>Add Payroll</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddPayroll">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PayrollId" class="control-label"></label>
+                <input asp-for="PayrollId" class="form-control" />
+                <span asp-validation-for="PayrollId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HourlyRate" class="control-label"></label>
+                <input asp-for="HourlyRate" class="form-control" />
+                <span asp-validation-for="HourlyRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GrossSalary" class="control-label"></label>
+                <input asp-for="GrossSalary" class="form-control" />
+                <span asp-validation-for="GrossSalary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NetSalary" class="control-label"></label>
+                <input asp-for="NetSalary" class="form-control" />
+                <span asp-validation-for="NetSalary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

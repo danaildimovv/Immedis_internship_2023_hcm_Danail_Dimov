@@ -85,5 +85,42 @@ namespace WebAPI.Controllers
 
             return Ok("Success in creating");
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateJob(int id, JobDTO job)
+        {
+            if (id != job.JobId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var jobMap = _mapper.Map<Job>(job);
+            var jobUpdated = _jobRepository.UpdateJobAsync(jobMap);
+
+            if (!await jobUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteJob(int id)
+        {
+            var job = await _jobRepository.GetJobByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _jobRepository.DeleteJobAsync(job))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+
+        }
+
     }
 }

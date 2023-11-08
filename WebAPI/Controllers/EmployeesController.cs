@@ -13,10 +13,12 @@ namespace WebAPI.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
-        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
+        private readonly IExperienceLevelRepository _experienceLevelRepository;
+        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper, IExperienceLevelRepository experienceLevelRepository)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
+            _experienceLevelRepository = experienceLevelRepository;
         }
 
         [HttpGet]
@@ -72,6 +74,7 @@ namespace WebAPI.Controllers
             }
 
             var employeeMap = _mapper.Map<Employee>(employee);
+            employeeMap.ExperienceLevel = await _experienceLevelRepository.GetExperienceLevelByIdAsync(employeeMap.ExperienceLevelId);
             var employeeCreated = await _employeeRepository.AddEmployeeAsync(employeeMap);
 
             if (!await employeeCreated)
@@ -82,86 +85,41 @@ namespace WebAPI.Controllers
 
             return Ok("Success in creating");
         }
-        /*
-        [HttpPost]
-        public async Task<IActionResult> Post(Employee employee)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEmployee(int id, EmployeeDTO employee)
         {
-            try { 
-                await _context.Employees.AddAsync(employee);
-                await _context.SaveChangesAsync();
-                return Ok("New employee was added.");
-            }
-            catch (Exception e)
+            if (id != employee.EmployeeId)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ModelState);
             }
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        [HttpPut]
-        public async Task<IActionResult> Put(Employee employee)
+            var employeeMap = _mapper.Map<Employee>(employee);
+            var employeeUpdated = _employeeRepository.UpdateEmployeeAsync(employeeMap);
+
+            if (!await employeeUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
-            if (employee == null)
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _employeeRepository.DeleteEmployeeAsync(employee))
             {
-                return BadRequest("wrong employee change");
+                ModelState.AddModelError("", "Error");
             }
+            return Ok("Succ");
 
-            var emp = await _context.Employees.FindAsync(employee.EmployeeId);
-            
-            if (emp == null)
-            {
-                return NotFound("Not Found.");
-            }
-            
-
-            try { 
-                emp.FirstName = employee.FirstName;
-                emp.LastName = employee.LastName;
-                emp.JobId = employee.JobId;
-                emp.ProjectId = employee.ProjectId;
-                emp.ExperienceLevelId = employee.ExperienceLevelId;
-                emp.EducationLevelId = employee.EducationLevelId;
-                emp.PayrollId = employee.PayrollId;
-                emp.BranchId = employee.BranchId;
-                emp.Email = employee.Email;
-                emp.UserId = employee.UserId;
-                emp.DateOfBirth = employee.DateOfBirth;
-                emp.EmployeeAddress = employee.EmployeeAddress;
-                emp.NationalityId = employee.NationalityId;
-                emp.Gender = employee.Gender;
-                emp.DateOfEmployment = employee.DateOfEmployment;
-                emp.DateOfLeaving = employee.DateOfLeaving;
-
-                await _context.SaveChangesAsync();
-
-                return Ok("change");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
         }
-
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            try { 
-                _context.Employees.Remove(employee);
-                await _context.SaveChangesAsync();
-                return Ok("delete");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        */
-
     }
 }

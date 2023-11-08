@@ -85,5 +85,41 @@ namespace WebAPI.Controllers
 
             return Ok("Success in creating");
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePayroll(int id, PayrollDTO payroll)
+        {
+            if (id != payroll.PayrollId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var payrollMap = _mapper.Map<Payroll>(payroll);
+            var payrollUpdated = _payrollRepository.UpdatePayrollAsync(payrollMap);
+
+            if (!await payrollUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePayroll(int id)
+        {
+            var payroll = await _payrollRepository.GetPayrollByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _payrollRepository.DeletePayrollAsync(payroll))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+        }
+       
     }
 }

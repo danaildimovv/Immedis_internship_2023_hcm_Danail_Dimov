@@ -1,13 +1,9 @@
 ﻿namespace WebAPI.DTO
 {
-    public class UserDTO
+    public class UserLoginDTO
     {
-        public int UserId { get; set; }
-
         public string Username { get; set; } = null!;
 
         public string Password { get; set; } = null!;
-
-        public int UserRoleId { get; set; }
     }
 }

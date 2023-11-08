@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ApplicationMVC.Models.Country>
 
 @{
-    ViewData["Title"] = "ListCountries";
+    ViewData["Title"] = "Index";
 }
 
-<h1>ListCountries</h1>
+<h1>Countries</h1>
 
 <p>
-    <a asp-action="AddCountry">Create New</a>
+    <a asp-action="AddCountry">Add New</a>
 </p>
 <table class="table">
     <thead>
@@ -31,9 +31,9 @@
                 @Html.DisplayFor(modelItem => item.CountryName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.CountryId }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "UpdateCountry", new { id=item.CountryId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.CountryId }) |
+                @Html.ActionLink("Delete", "DeleteCountry", new { id=item.CountryId })
             </td>
         </tr>
 }

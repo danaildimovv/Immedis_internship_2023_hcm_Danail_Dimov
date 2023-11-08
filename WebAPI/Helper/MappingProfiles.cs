@@ -42,6 +42,8 @@ namespace WebAPI.Helper
             CreateMap<UserRoleDTO, UserRole>();
 
             CreateMap<HcmUser, UserDTO>();
+            CreateMap<HcmUser, UserDetailsDTO>();
+            CreateMap<UserLoginDTO, HcmUser>();
             CreateMap<UserDTO, HcmUser>();
         }
     }

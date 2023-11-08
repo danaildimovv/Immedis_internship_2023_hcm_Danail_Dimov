@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ApplicationMVC.Models.Employee>
 
 @{
-    ViewData["Title"] = "EmployeesController";
+    ViewData["Title"] = "Index";
 }
 
-<h1>EmployeesController</h1>
+<h1>Employees</h1>
 
 <p>
-    <a asp-action="AddEmployee">Create New</a>
+    <a asp-action="AddEmployee">Add New</a>
 </p>
 <table class="table">
     <thead>
@@ -31,17 +31,20 @@
                 @Html.DisplayNameFor(model => model.ExperienceLevelId)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.BranchId)
+            </th>
+            <!--
+            <th>
                 @Html.DisplayNameFor(model => model.EducationLevelId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PayrollId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BranchId)
-            </th>
+            -->
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
+            <!--
             <th>
                 @Html.DisplayNameFor(model => model.UserId)
             </th>
@@ -53,7 +56,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Gender)
-            </th>
+            </th>-->
             <th></th>
         </tr>
     </thead>
@@ -78,34 +81,44 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ExperienceLevelId)
             </td>
+            <!--
             <td>
                 @Html.DisplayFor(modelItem => item.EducationLevelId)
             </td>
+                -->
+                <!--
             <td>
                 @Html.DisplayFor(modelItem => item.PayrollId)
             </td>
+                -->
             <td>
                 @Html.DisplayFor(modelItem => item.BranchId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
+            <!--
             <td>
                 @Html.DisplayFor(modelItem => item.UserId)
             </td>
+                -->
+                <!--
             <td>
                 @Html.DisplayFor(modelItem => item.EmployeeAddress)
             </td>
+                -->
+                <!--
             <td>
                 @Html.DisplayFor(modelItem => item.NationalityId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Gender)
             </td>
+                -->
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "UpdateEmployee", new { id=item.EmployeeId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.EmployeeId }) |
+                @Html.ActionLink("Delete", "DeleteEmployee", new { id=item.EmployeeId })
             </td>
         </tr>
 }

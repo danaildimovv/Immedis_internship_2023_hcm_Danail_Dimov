@@ -26,18 +26,21 @@ namespace WebAPI.Repositories
         }
         public async Task<Task<bool>> AddEmployeeAsync(Employee employee)
         {
+            await _context.Employees.AddAsync(employee);
+            await _context.SaveChangesAsync();
+
             var employeeBranch = new EmployeesBranchesHistory()
             {
                 EmployeeId = employee.EmployeeId,
                 BranchId = employee.BranchId
             };
             await _context.EmployeesBranchesHistory.AddAsync(employeeBranch);
+
             var employeeJob = new EmployeesJobHistory()
             {
                 EmployeeId = employee.EmployeeId,
                 JobId = employee.JobId
             };
-
             await _context.EmployeesJobHistory.AddAsync(employeeJob);
 
             var projectsTeamHistory = new ProjectsTeamsHistory()
@@ -45,10 +48,8 @@ namespace WebAPI.Repositories
                 EmployeeId = employee.EmployeeId,
                 ProjectId = employee.ProjectId
             };
-
             await _context.ProjectsTeamsHistory.AddAsync(projectsTeamHistory);
 
-            await _context.Employees.AddAsync(employee);
             return _genericRepository.SaveAsync();
         }
         public async Task<bool> UpdateEmployeeAsync(Employee employee)

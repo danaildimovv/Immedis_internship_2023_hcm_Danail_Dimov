@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Interfaces;
 using WebAPI.Models;
+using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
@@ -83,6 +84,43 @@ namespace WebAPI.Controllers
             }
 
             return Ok("Success in creating");
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProject(int id, ProjectDTO project)
+        {
+
+            if (id != project.ProjectId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var projectMap = _mapper.Map<Project>(project);
+            var projectUpdated = _projectRepository.UpdateProjectAsync(projectMap);
+
+            if (!await projectUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            var project = await _projectRepository.GetProjectByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _projectRepository.DeleteProjectAsync(project))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+
         }
     }
 }

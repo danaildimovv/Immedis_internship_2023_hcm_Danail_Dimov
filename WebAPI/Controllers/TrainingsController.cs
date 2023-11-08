@@ -85,5 +85,42 @@ namespace WebAPI.Controllers
 
             return Ok("Success in creating");
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTraining(int id, TrainingDTO training)
+        {
+
+            if (id != training.TrainingId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var trainingMap = _mapper.Map<Training>(training);
+            var trainingUpdated = _trainingRepository.UpdateTrainingAsync(trainingMap);
+
+            if (!await trainingUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTraining(int id)
+        {
+            var training = await _trainingRepository.GetTrainingByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _trainingRepository.DeleteTrainingAsync(training))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+
+        }
     }
 }

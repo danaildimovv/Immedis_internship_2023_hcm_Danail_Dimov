@@ -67,7 +67,6 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost]
-
         public async Task<IActionResult> AddExperienceLevel(ExperienceLevelDTO experienceLevel)
         {
             if (!ModelState.IsValid)
@@ -85,6 +84,42 @@ namespace WebAPI.Controllers
             }
 
             return Ok("Success in creating");
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateExperienceLevel(int id, ExperienceLevelDTO experienceLevel)
+        {
+            if (id != experienceLevel.ExperienceLevelId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var experienceLevelMap = _mapper.Map<ExperienceLevel>(experienceLevel);
+            var experienceLevelUpdated = _experienceLevelRepository.UpdateExperienceLevelAsync(experienceLevelMap);
+
+            if (!await experienceLevelUpdated)
+            {
+                ModelState.AddModelError("", "Something Went Wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Updated");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExperienceLevel(int id)
+        {
+            var experienceLevel = await _experienceLevelRepository.GetExperienceLevelByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _experienceLevelRepository.DeleteExperienceLevelAsync(experienceLevel))
+            {
+                ModelState.AddModelError("", "Error");
+            }
+            return Ok("Succ");
+
         }
     }
 }

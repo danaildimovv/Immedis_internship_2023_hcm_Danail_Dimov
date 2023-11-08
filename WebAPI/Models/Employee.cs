@@ -46,6 +46,7 @@ public partial class Employee
     public virtual ICollection<EmployeesJobHistory> EmployeesJobHistories { get; set; } = new List<EmployeesJobHistory>();
 
     public virtual ExperienceLevel? ExperienceLevel { get; set; }
+    public virtual EducationLevel? EducationLevel { get; set; }
 
     public virtual Job? Job { get; set; }
 

@@ -1,4 +1,6 @@
-﻿namespace WebAPI.DTO
+﻿using WebAPI.Models;
+
+namespace WebAPI.DTO
 {
     public class EmployeeDTO
     {
@@ -35,5 +37,7 @@
         public DateOnly DateOfEmployment { get; set; }
 
         public DateOnly? DateOfLeaving { get; set; }
+
+        public virtual ExperienceLevel? ExperienceLevel { get; set; }
     }
 }

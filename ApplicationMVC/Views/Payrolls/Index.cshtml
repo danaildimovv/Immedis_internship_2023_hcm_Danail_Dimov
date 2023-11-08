@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ApplicationMVC.Models.Payroll>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Payrolls</h1>
+
+<p>
+    <a asp-action="AddPayroll">Add New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PayrollId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HourlyRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrossSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetSalary)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayrollId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HourlyRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrossSalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetSalary)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "UpdatePayroll", new { id=item.PayrollId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.PayrollId }) |
+                @Html.ActionLink("Delete", "DeletePayroll", new { id=item.PayrollId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
