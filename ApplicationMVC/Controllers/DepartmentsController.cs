@@ -62,12 +62,18 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> AddDepartment(Department d)
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync("Departments", d);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("ListDepartments", "Departments");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Department created successfully";
+                    return RedirectToAction("ListDepartments", "Departments");
+                }
             }
-            ModelState.AddModelError(string.Empty, "Error");
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
             return View();
         }
         [HttpGet]
@@ -90,11 +96,18 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> UpdateDepartment(Department d)
         {
             HttpResponseMessage response = await _client.PutAsJsonAsync("Departments/" + d.DepartmentId, d);
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "Departments");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Department updated successfully";
+                    return RedirectToAction("Index", "Departments");
+                }
             }
-
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
             ModelState.AddModelError("", "Error occured");
 
             return View();
@@ -115,11 +128,20 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> DeleteDepartmentConfirmation(int id)
         {
             HttpResponseMessage response = await _client.DeleteAsync("Departments/" + id);
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "Departments");
-            }
 
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Department deleted successfully";
+                    return RedirectToAction("Index", "Departments");
+                }
+            }
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
             return View();
         }
     }

@@ -62,12 +62,19 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> AddProject(Project p)
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync("Projects", p);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "Projects");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Project created successfully";
+                    return RedirectToAction("Index", "Projects");
+                }
             }
-            ModelState.AddModelError(string.Empty, "Error");
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
+            
             return View();
         }
         [HttpGet]
@@ -90,12 +97,19 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> UpdateProject(Project p)
         {
             HttpResponseMessage response = await _client.PutAsJsonAsync("Projects/" + p.ProjectId, p);
-            if (response.IsSuccessStatusCode)
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Project updated successfully";
+                    return RedirectToAction("Index", "Projects");
+                }
+            }
+            catch(Exception e)
             {
-                return RedirectToAction("Index", "Projects");
+                TempData["errorMessage"] = e.Message;
+                return View();
             }
 
-            ModelState.AddModelError("", "Error occured");
 
             return View();
         }
@@ -115,9 +129,17 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> DeleteProjectConfirmation(int id)
         {
             HttpResponseMessage response = await _client.DeleteAsync("Projects/" + id);
-            if (response.IsSuccessStatusCode)
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Project deleted successfully";
+                    return RedirectToAction("Index", "Projects");
+                }
+            }
+            catch(Exception e)
             {
-                return RedirectToAction("Index", "Projects");
+                TempData["errorMessage"] = e.Message;
+                return View();
             }
 
             return View();

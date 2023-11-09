@@ -62,12 +62,19 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> AddPayroll(Payroll p)
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync("Payrolls", p);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("ListPayrolls", "Payrolls");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Payroll created successfully";
+                    return RedirectToAction("ListPayrolls", "Payrolls");
+                }
             }
-            ModelState.AddModelError(string.Empty, "Error");
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
+
             return View();
         }
         [HttpGet]
@@ -90,12 +97,18 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> UpdatePayroll(Payroll p)
         {
             HttpResponseMessage response = await _client.PutAsJsonAsync("Payrolls/" + p.PayrollId, p);
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "Payrolls");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Payroll updated successfully";
+                    return RedirectToAction("Index", "Payrolls");
+                }
             }
-
-            ModelState.AddModelError("", "Error occured");
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
 
             return View();
         }
@@ -115,9 +128,17 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> DeletePayrollConfirmation(int id)
         {
             HttpResponseMessage response = await _client.DeleteAsync("Payrolls/" + id);
-            if (response.IsSuccessStatusCode)
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Payroll deleted successfully";
+                    return RedirectToAction("Index", "Payrolls");
+                }
+            }
+            catch(Exception e)
             {
-                return RedirectToAction("Index", "Payrolls");
+                TempData["errorMessage"] = e.Message;
+                return View();
             }
 
             return View();

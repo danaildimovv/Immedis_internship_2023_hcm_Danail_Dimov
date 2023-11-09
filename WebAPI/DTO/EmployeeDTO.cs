@@ -38,6 +38,5 @@ namespace WebAPI.DTO
 
         public DateOnly? DateOfLeaving { get; set; }
 
-        public virtual ExperienceLevel? ExperienceLevel { get; set; }
     }
 }

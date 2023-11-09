@@ -143,7 +143,7 @@ namespace WebAPI.Controllers
         };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection
-                ("AppSettings:Token").Value));
+                ("AppSecret:Token").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(

@@ -74,7 +74,6 @@ namespace WebAPI.Controllers
             }
 
             var employeeMap = _mapper.Map<Employee>(employee);
-            employeeMap.ExperienceLevel = await _experienceLevelRepository.GetExperienceLevelByIdAsync(employeeMap.ExperienceLevelId);
             var employeeCreated = await _employeeRepository.AddEmployeeAsync(employeeMap);
 
             if (!await employeeCreated)

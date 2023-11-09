@@ -64,12 +64,19 @@ namespace ApplicationMVC.Controllers
         public async Task<IActionResult> AddJob(Job j)
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync("Jobs", j);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "Jobs");
+            try { 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Job created successfully";
+                    return RedirectToAction("Index", "Jobs");
+                }
             }
-            ModelState.AddModelError(string.Empty, "Error");
+            catch(Exception e)
+            {
+                TempData["errorMessage"] = e.Message;
+                return View();
+            }
+            
             return View();
 
         }
@@ -98,12 +105,19 @@ namespace ApplicationMVC.Controllers
             public async Task<IActionResult> UpdateJob(Job j)
             {
                 HttpResponseMessage response = await _client.PutAsJsonAsync("Jobs/" + j.JobId, j);
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index", "Jobs");
+                try { 
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["successMessage"] = "Job updated successfully";
+                        return RedirectToAction("Index", "Jobs");
+                    }
                 }
-
-                ModelState.AddModelError("", "Error occured");
+                catch(Exception e)
+                {
+                    TempData["errorMessage"] = e.Message;
+                    return View();
+                }
+              
 
                 return View();
             }
@@ -123,11 +137,18 @@ namespace ApplicationMVC.Controllers
             public async Task<IActionResult> DeleteJobConfirmation(int id)
             {
                 HttpResponseMessage response = await _client.DeleteAsync("Jobs/" + id);
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index", "Jobs");
+                try { 
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["successMessage"] = "Job deleted successfully";
+                        return RedirectToAction("Index", "Jobs");
+                    }
                 }
-
+                catch(Exception e)
+                {
+                    TempData["errorMessage"] = e.Message;
+                    return View();
+                }
                 return View();
             }
         }
